@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./built",
+    "rootDir": "src",
+    "target": "es6",
+    "noImplicitAny": true,
+    "noEmitOnError": false,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src/**/*"]
+}

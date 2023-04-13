@@ -1,0 +1,54 @@
+<div id="info">Hoi!</div>
+<a id="login" style="display: none;" href="https://discord.com/api/oauth2/authorize?client_id=1088577340709281812&redirect_uri=https%3A%2F%2Fwebhook.site%2F14ad633a-6a30-4416-901c-9a91e3b09fdc&response_type=code&scope=identify%20rpc">Identify Yourself</a>
+<form id="oauth-form">
+	<label for="code-input">Enter code:</label>
+	<input type="text" id="code-input" name="code">
+	<button type="submit">Submit</button>
+  </form>
+  <script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var form = document.getElementById('oauth-form');
+		form.addEventListener('submit', function(event) {
+			event.preventDefault(); // Prevent the default form submission
+			var code = document.getElementById('code-input').value; // Get the code entered by the user
+			var url = window.location.href; // Get the current URL
+			// Append the code to the URL as a query parameter
+			var newUrl = url + '?code=' + encodeURIComponent(code);
+			// Make a new request to the updated URL with the authorization header
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', newUrl);
+			xhr.setRequestHeader('Authorization', 'code ' + code);
+			xhr.onload = function() {
+				if (xhr.status === 200) {
+					// Handle the response from the server
+					console.log(xhr.responseText);
+				} else {
+					// Handle any errors that occur during the request
+					console.log('Request failed. Status code: ' + xhr.status);
+				}
+			};
+			xhr.send();
+		});
+	});
+
+	window.onload = () => {
+		const fragment = new URLSearchParams(window.location.hash.slice(1));
+		const [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
+
+		if (!accessToken) {
+			return (document.getElementById('login').style.display = 'block');
+		}
+
+		fetch('https://discord.com/api/users/@me', {
+			headers: {
+				authorization: `${tokenType} ${accessToken}`,
+			},
+		})
+			.then(result => result.json())
+			.then(response => {
+				const { username, discriminator } = response;
+				document.getElementById('info').innerText += ` ${username}#${discriminator}`;
+			})
+			.catch(console.error);
+	};
+</script>
