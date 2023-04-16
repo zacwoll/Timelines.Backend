@@ -2,7 +2,9 @@
 import { Socket } from 'net';
 const qs = require('qs'); // To convert the data to x-www-form-urlencoded format
 import axios from 'axios';
-import { encodeIPCMessage, decodeIPCMessage } from './IPC';
+import { encodeIPCMessage, decodeIPCMessage, encodeIPCCmd } from './IPC';
+import { serverLog } from '../server';
+import { channel } from 'diagnostics_channel';
 const { v4: uuidv4 } = require('uuid');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -10,11 +12,27 @@ dotenv.config();
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
 
+class ProgrammableSocket extends Socket {
+  write_cmd(data: string, callback?: (error: Error | null | undefined) => void): boolean {
+    const buffer = Buffer.from(data);
+    const opcode = 0x01; // Set the opcode to 0x01 (text data)
+    const header = Buffer.alloc(2);
+    header.writeUInt8(opcode, 0);
+    header.writeUInt8(buffer.length, 1);
+
+    const payload = Buffer.concat([header, buffer]);
+    return super.write(payload, callback);
+  }
+}
+
+
 export async function authorizeClient(client: Socket) {
   return new Promise(async (resolve, reject) => {
+    let subscriber_count = 0;
+    let channel_count = 0;
     client.on('data', async (data) => {
       const message = decodeIPCMessage(data);
-      console.log('Received message:', JSON.stringify(message, null, 2));
+      serverLog.info(message);
     
       if (message.payload.evt === "READY") {
         const nonce = uuidv4();
@@ -25,9 +43,8 @@ export async function authorizeClient(client: Socket) {
             client_id: CLIENT_ID,
             scopes: ['rpc', 'identify', 'messages.read'],
           },
-        }; 
-  
-        const auth = encodeIPCMessage(1, authorizeCmd);
+        };  
+        const auth = encodeIPCCmd(authorizeCmd)
         client.write(auth);
   
         console.log('Sent AUTHORIZE command');
@@ -68,17 +85,8 @@ export async function authorizeClient(client: Socket) {
         let data = message.payload.data;
         resolve(client);
         // begin harvesting data from account
-  
-        // Get Guilds upon authentication
-  
-        // let nonce = uuidv4();
-        // let getGuildsCmd = {
-        //   nonce,
-        //   args: {},
-        //   cmd: "GET_GUILDS"
-        // }
-        // client.write(encodeIPCMessage(1, getGuildsCmd));
       }
+    
     });
   })
 }
