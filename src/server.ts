@@ -1,8 +1,7 @@
 const express = require('express');
 const qs = require('qs'); // To convert the data to x-www-form-urlencoded format
 import { createNewLogger } from './utils/logger';
-import { getClient } from './utils/DiscordClient';
-import { DiscordClient } from './utils/handler';
+import { DiscordClient } from './utils/DiscordClient';
 import { encodeIPCMessage, decodeIPCMessage } from './utils/IPC';
 const { v4: uuidv4 } = require('uuid');
 const dotenv = require('dotenv');
@@ -17,6 +16,20 @@ const port = 3000;
 export const serverLog = createNewLogger('server');
 
 let discord = new DiscordClient();
+    // Send GET_GUILDS
+    // let nonce = uuidv4();
+    // let getGuildsCmd = {
+    //     nonce,
+    //     args: {},
+    //     cmd: "GET_GUILDS"
+    //     }
+    // discord.write(encodeIPCMessage(1, getGuildsCmd));
+    // discord.on('data', data => {
+    //     const message = decodeIPCMessage(data);
+    //     console.log(JSON.stringify(message));
+    // })
+
+// getClient();
 
 // // // Run Setup
 // // let client = getClient();

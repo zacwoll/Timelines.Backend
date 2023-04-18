@@ -16,7 +16,7 @@
   },
   "scripts": {
     "compile": "npx tsc",
-    "build": "esbuild src/server.ts --bundle --outfile=built/backend.js --platform=node",
+    "build": "esbuild src/utils/setup.ts --bundle --outfile=built/backend.js --platform=node",
     "watch": "esbuild ./built/server.js --bundle --outfile=built/backend.js --platform=node --watch"
   },
   "devDependencies": {
