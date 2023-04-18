@@ -6,9 +6,12 @@ import dotenv from 'dotenv';
 import { EventEmitter } from 'events';
 dotenv.config();
 import { encodeIPCMessage, decodeIPCMessage } from './IPC';
-import { Observable, Subject } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
+import { fromEvent, Observable, of, Subject } from 'rxjs';
+import { concatMap, delay, map, throttleTime } from 'rxjs/operators';
+import { createNewLogger } from './logger';
+import { setupLog } from './setup';
 
+const clientLog = createNewLogger('client');
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -19,6 +22,7 @@ export class DiscordClient extends Socket {
   protected client: Socket;
   private sendMessageSubject: Subject<Buffer>;
   private throttledObservable: Observable<Buffer>;
+  public incomingData: Observable<Buffer>;
 
   constructor() {
     super();
@@ -26,6 +30,18 @@ export class DiscordClient extends Socket {
     this.connectIPC(this.pipeName);
     this.sendMessageSubject = new Subject<Buffer>();
     this.setupThrottling();
+    this.setupCrier();
+  }
+
+  // Create Crier
+  private setupCrier(): void {
+    this.incomingData = fromEvent(this.client, 'data').pipe(
+      map((rawData) => {
+        clientLog.info(`Incoming Data: ${decodeIPCMessage(rawData)}`);
+      // Transform the raw data from the Socket into your desired data model
+          return rawData;
+      }
+    ));
   }
 
   // Create Gatekeeper
@@ -34,12 +50,16 @@ export class DiscordClient extends Socket {
   // observable's pipe-through speed becomes throttled by throttleTime
 
   private setupThrottling(): void {
-    // Throttle calls to processQueue (every 2 seconds)
-    this.throttledObservable = this.sendMessageSubject.pipe(throttleTime(2000));
-
-    // Subscribe to the throttled observable to process the queue
-    this.throttledObservable.subscribe((data) => this.processQueue(data));
+    this.sendMessageSubject
+      .pipe(
+        concatMap((data) => {
+          // Wait for the specified duration before processing the next message
+          return of(data).pipe(delay(600));
+        })
+      )
+      .subscribe((data) => this.processQueue(data));
   }
+  
 
   async addToQueue(payload: Buffer) {
     this.sendMessageSubject.next(payload);
@@ -50,7 +70,7 @@ export class DiscordClient extends Socket {
   }
 
   // async write to client
-  protected async sendCommand(cmd: string, args: Record<string, any>): Promise<string> {
+  public async sendCommand(cmd: string, args: Record<string, any>): Promise<string> {
     if (!this._authorized) {
       throw new Error('Cannot send command. The Discord IPC client is not connected.');
     }
@@ -60,6 +80,7 @@ export class DiscordClient extends Socket {
       cmd,
       args,
     };
+    clientLog.info(`Adding ${message.cmd} to processQueue`);
     const buffer = encodeIPCMessage(1, message);
     this.addToQueue(buffer);
     return nonce;
@@ -74,6 +95,10 @@ export class DiscordClient extends Socket {
       console.log('Connected to Discord IPC');
       this.authorize(['rpc', 'identify', 'messages.read']);
       this.client.removeAllListeners('connect');
+    });
+
+    this.client.on('error', (error) => {
+      setupLog.error(error);
     });
   
     return this;
@@ -119,6 +144,7 @@ export class DiscordClient extends Socket {
       }
     
       if (message.payload.cmd === "AUTHORIZE") {
+        console.log('Authorized, Waiting for Token');
         // Await getting Authorized
         try {
           const data = {
@@ -156,6 +182,20 @@ export class DiscordClient extends Socket {
         this.client.removeAllListeners('data');
         console.log("Authorized Connection to Discord Client");
         this.client.emit('authorized');
+      }
+    });
+  }
+
+  // Promise waits for custom event, authorized to fire
+  // Call this method to ensure your program has waited to use the client
+  public waitForAuthorization(): Promise<void> {
+    return new Promise((resolve) => {
+      if (this._authorized) {
+        resolve();
+      } else {
+        this.client.once('authorized', () => {
+          resolve();
+        });
       }
     });
   }

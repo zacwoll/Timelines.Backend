@@ -1,0 +1,290 @@
+    {
+  message: 'Adding GET_GUILDS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.776Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.783Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.784Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.785Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.787Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.787Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.788Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.790Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.791Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.792Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.793Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.794Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.796Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.796Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:10:19.797Z'
+}
+    {
+  message: 'Adding GET_GUILDS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.641Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.665Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.666Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.667Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.668Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.669Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.670Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.671Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.672Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.673Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.674Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.674Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.676Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.676Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:16:38.677Z'
+}
+    {
+  message: 'Adding GET_GUILDS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:26.972Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.595Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.596Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.598Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.599Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.600Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.601Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.602Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.603Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.604Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.605Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.606Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.608Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.609Z'
+}
+    {
+  message: 'Adding GET_CHANNELS to processQueue',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:27.610Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:28.209Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:28.813Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:29.417Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:30.032Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:30.647Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:31.261Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:31.868Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:32.474Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:33.085Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:33.696Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:34.318Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:34.923Z'
+}
+    {
+  message: 'Incoming Data: [object Object]',
+  level: 'info',
+  timestamp: '2023-04-18T23:18:35.538Z'
+}
