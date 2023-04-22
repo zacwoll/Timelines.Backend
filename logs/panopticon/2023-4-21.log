@@ -1,0 +1,126 @@
+    {
+  message: [
+    {
+      id: '125440014904590336',
+      name: 'r/leagueoflegends',
+      icon_url: 'https://cdn.discordapp.com/icons/125440014904590336/a_826554b8806f31826f587335d2a61414.webp?size=240'
+    },
+    {
+      id: '165925702808502272',
+      name: 'The Mob',
+      icon_url: 'https://cdn.discordapp.com/icons/165925702808502272/34a9c283d6fa854f2485a771261286e1.webp?size=240'
+    },
+    {
+      id: '187652476080488449',
+      name: 'Riot Games Third Party Developer Community',
+      icon_url: 'https://cdn.discordapp.com/icons/187652476080488449/38ab452a4028657ac23c1bd3b3ef3983.webp?size=240'
+    },
+    {
+      id: '410966373531910144',
+      name: 'MegaVania',
+      icon_url: 'https://cdn.discordapp.com/icons/410966373531910144/3dfcf4d36cbc8a34e4b92a9416ca6b65.webp?size=240'
+    },
+    {
+      id: '613425648685547541',
+      name: 'Discord Developers',
+      icon_url: 'https://cdn.discordapp.com/icons/613425648685547541/a_08b73e86d3c5661db3e397e4c557f751.webp?size=240'
+    },
+    {
+      id: '660561250266120195',
+      name: 'Trans Peer Network',
+      icon_url: 'https://cdn.discordapp.com/icons/660561250266120195/72482c981d63cba522f54e14c79695e4.webp?size=240'
+    },
+    { id: '761085263815639071', name: "DoctorJ11's server" },
+    {
+      id: '774370784109789205',
+      name: 'The Downbeat Discord',
+      icon_url: 'https://cdn.discordapp.com/icons/774370784109789205/a_d341040a5c023f51d41e4def015d156a.webp?size=240'
+    },
+    {
+      id: '783425607492304947',
+      name: 'JWC Courses',
+      icon_url: 'https://cdn.discordapp.com/icons/783425607492304947/af42be28c1e6e5307fb0f740708eaa25.webp?size=240'
+    },
+    {
+      id: '913728646492078120',
+      name: '13th Floor',
+      icon_url: 'https://cdn.discordapp.com/icons/913728646492078120/e3f66ed59aa449da5a2230d2e141c385.webp?size=240'
+    },
+    {
+      id: '916351332628201472',
+      name: 'ODOT: Oklahoma Department of Trans',
+      icon_url: 'https://cdn.discordapp.com/icons/916351332628201472/03dc2de66dbf4309c0afcee9ad221be4.webp?size=240'
+    },
+    { id: '983494813578039376', name: "Ziggy's Playground" },
+    {
+      id: '993692572331561012',
+      name: 'cule',
+      icon_url: 'https://cdn.discordapp.com/icons/993692572331561012/8dc49742788e08c1395a1cf26c8a674c.webp?size=240'
+    }
+  ],
+  level: 'info',
+  timestamp: '2023-04-21T22:45:01.734Z'
+}
+    {
+  message: [
+    {
+      id: '125440014904590336',
+      name: 'r/leagueoflegends',
+      icon_url: 'https://cdn.discordapp.com/icons/125440014904590336/a_826554b8806f31826f587335d2a61414.webp?size=240'
+    },
+    {
+      id: '165925702808502272',
+      name: 'The Mob',
+      icon_url: 'https://cdn.discordapp.com/icons/165925702808502272/34a9c283d6fa854f2485a771261286e1.webp?size=240'
+    },
+    {
+      id: '187652476080488449',
+      name: 'Riot Games Third Party Developer Community',
+      icon_url: 'https://cdn.discordapp.com/icons/187652476080488449/38ab452a4028657ac23c1bd3b3ef3983.webp?size=240'
+    },
+    {
+      id: '410966373531910144',
+      name: 'MegaVania',
+      icon_url: 'https://cdn.discordapp.com/icons/410966373531910144/3dfcf4d36cbc8a34e4b92a9416ca6b65.webp?size=240'
+    },
+    {
+      id: '613425648685547541',
+      name: 'Discord Developers',
+      icon_url: 'https://cdn.discordapp.com/icons/613425648685547541/a_08b73e86d3c5661db3e397e4c557f751.webp?size=240'
+    },
+    {
+      id: '660561250266120195',
+      name: 'Trans Peer Network',
+      icon_url: 'https://cdn.discordapp.com/icons/660561250266120195/72482c981d63cba522f54e14c79695e4.webp?size=240'
+    },
+    { id: '761085263815639071', name: "DoctorJ11's server" },
+    {
+      id: '774370784109789205',
+      name: 'The Downbeat Discord',
+      icon_url: 'https://cdn.discordapp.com/icons/774370784109789205/a_d341040a5c023f51d41e4def015d156a.webp?size=240'
+    },
+    {
+      id: '783425607492304947',
+      name: 'JWC Courses',
+      icon_url: 'https://cdn.discordapp.com/icons/783425607492304947/af42be28c1e6e5307fb0f740708eaa25.webp?size=240'
+    },
+    {
+      id: '913728646492078120',
+      name: '13th Floor',
+      icon_url: 'https://cdn.discordapp.com/icons/913728646492078120/e3f66ed59aa449da5a2230d2e141c385.webp?size=240'
+    },
+    {
+      id: '916351332628201472',
+      name: 'ODOT: Oklahoma Department of Trans',
+      icon_url: 'https://cdn.discordapp.com/icons/916351332628201472/03dc2de66dbf4309c0afcee9ad221be4.webp?size=240'
+    },
+    { id: '983494813578039376', name: "Ziggy's Playground" },
+    {
+      id: '993692572331561012',
+      name: 'cule',
+      icon_url: 'https://cdn.discordapp.com/icons/993692572331561012/8dc49742788e08c1395a1cf26c8a674c.webp?size=240'
+    }
+  ],
+  level: 'info',
+  timestamp: '2023-04-21T23:17:34.488Z'
+}

@@ -1,9 +1,26 @@
 var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __defProps = Object.defineProperties;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b ||= {})
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
+};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __esm = (fn, res) => function __init() {
   return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
 };
@@ -15898,155 +15915,6 @@ var require_winston_daily_rotate_file = __commonJS({
   }
 });
 
-// node_modules/dotenv/package.json
-var require_package2 = __commonJS({
-  "node_modules/dotenv/package.json"(exports, module2) {
-    module2.exports = {
-      name: "dotenv",
-      version: "16.0.3",
-      description: "Loads environment variables from .env file",
-      main: "lib/main.js",
-      types: "lib/main.d.ts",
-      exports: {
-        ".": {
-          require: "./lib/main.js",
-          types: "./lib/main.d.ts",
-          default: "./lib/main.js"
-        },
-        "./config": "./config.js",
-        "./config.js": "./config.js",
-        "./lib/env-options": "./lib/env-options.js",
-        "./lib/env-options.js": "./lib/env-options.js",
-        "./lib/cli-options": "./lib/cli-options.js",
-        "./lib/cli-options.js": "./lib/cli-options.js",
-        "./package.json": "./package.json"
-      },
-      scripts: {
-        "dts-check": "tsc --project tests/types/tsconfig.json",
-        lint: "standard",
-        "lint-readme": "standard-markdown",
-        pretest: "npm run lint && npm run dts-check",
-        test: "tap tests/*.js --100 -Rspec",
-        prerelease: "npm test",
-        release: "standard-version"
-      },
-      repository: {
-        type: "git",
-        url: "git://github.com/motdotla/dotenv.git"
-      },
-      keywords: [
-        "dotenv",
-        "env",
-        ".env",
-        "environment",
-        "variables",
-        "config",
-        "settings"
-      ],
-      readmeFilename: "README.md",
-      license: "BSD-2-Clause",
-      devDependencies: {
-        "@types/node": "^17.0.9",
-        decache: "^4.6.1",
-        dtslint: "^3.7.0",
-        sinon: "^12.0.1",
-        standard: "^16.0.4",
-        "standard-markdown": "^7.1.0",
-        "standard-version": "^9.3.2",
-        tap: "^15.1.6",
-        tar: "^6.1.11",
-        typescript: "^4.5.4"
-      },
-      engines: {
-        node: ">=12"
-      }
-    };
-  }
-});
-
-// node_modules/dotenv/lib/main.js
-var require_main = __commonJS({
-  "node_modules/dotenv/lib/main.js"(exports, module2) {
-    var fs = require("fs");
-    var path = require("path");
-    var os = require("os");
-    var packageJson = require_package2();
-    var version2 = packageJson.version;
-    var LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/mg;
-    function parse2(src) {
-      const obj = {};
-      let lines = src.toString();
-      lines = lines.replace(/\r\n?/mg, "\n");
-      let match;
-      while ((match = LINE.exec(lines)) != null) {
-        const key = match[1];
-        let value = match[2] || "";
-        value = value.trim();
-        const maybeQuote = value[0];
-        value = value.replace(/^(['"`])([\s\S]*)\1$/mg, "$2");
-        if (maybeQuote === '"') {
-          value = value.replace(/\\n/g, "\n");
-          value = value.replace(/\\r/g, "\r");
-        }
-        obj[key] = value;
-      }
-      return obj;
-    }
-    function _log(message) {
-      console.log(`[dotenv@${version2}][DEBUG] ${message}`);
-    }
-    function _resolveHome(envPath) {
-      return envPath[0] === "~" ? path.join(os.homedir(), envPath.slice(1)) : envPath;
-    }
-    function config(options) {
-      let dotenvPath = path.resolve(process.cwd(), ".env");
-      let encoding = "utf8";
-      const debug = Boolean(options && options.debug);
-      const override = Boolean(options && options.override);
-      if (options) {
-        if (options.path != null) {
-          dotenvPath = _resolveHome(options.path);
-        }
-        if (options.encoding != null) {
-          encoding = options.encoding;
-        }
-      }
-      try {
-        const parsed = DotenvModule.parse(fs.readFileSync(dotenvPath, { encoding }));
-        Object.keys(parsed).forEach(function(key) {
-          if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
-            process.env[key] = parsed[key];
-          } else {
-            if (override === true) {
-              process.env[key] = parsed[key];
-            }
-            if (debug) {
-              if (override === true) {
-                _log(`"${key}" is already defined in \`process.env\` and WAS overwritten`);
-              } else {
-                _log(`"${key}" is already defined in \`process.env\` and was NOT overwritten`);
-              }
-            }
-          }
-        });
-        return { parsed };
-      } catch (e) {
-        if (debug) {
-          _log(`Failed to load ${dotenvPath} ${e.message}`);
-        }
-        return { error: e };
-      }
-    }
-    var DotenvModule = {
-      config,
-      parse: parse2
-    };
-    module2.exports.config = DotenvModule.config;
-    module2.exports.parse = DotenvModule.parse;
-    module2.exports = DotenvModule;
-  }
-});
-
 // node_modules/uuid/dist/esm-node/rng.js
 function rng() {
   if (poolPtr > rnds8Pool.length - 16) {
@@ -17811,7 +17679,7 @@ var require_stringify = __commonJS({
       return typeof v === "string" || typeof v === "number" || typeof v === "boolean" || typeof v === "symbol" || typeof v === "bigint";
     };
     var sentinel = {};
-    var stringify2 = function stringify3(object, prefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter2, sort, allowDots, serializeDate, format2, formatter, encodeValuesOnly, charset, sideChannel) {
+    var stringify2 = function stringify3(object, prefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter3, sort, allowDots, serializeDate, format2, formatter, encodeValuesOnly, charset, sideChannel) {
       var obj = object;
       var tmpSc = sideChannel;
       var step = 0;
@@ -17830,8 +17698,8 @@ var require_stringify = __commonJS({
           step = 0;
         }
       }
-      if (typeof filter2 === "function") {
-        obj = filter2(prefix, obj);
+      if (typeof filter3 === "function") {
+        obj = filter3(prefix, obj);
       } else if (obj instanceof Date) {
         obj = serializeDate(obj);
       } else if (generateArrayPrefix === "comma" && isArray2(obj)) {
@@ -17870,8 +17738,8 @@ var require_stringify = __commonJS({
       var objKeys;
       if (generateArrayPrefix === "comma" && isArray2(obj)) {
         objKeys = [{ value: obj.length > 0 ? obj.join(",") || null : void 0 }];
-      } else if (isArray2(filter2)) {
-        objKeys = filter2;
+      } else if (isArray2(filter3)) {
+        objKeys = filter3;
       } else {
         var keys = Object.keys(obj);
         objKeys = sort ? keys.sort(sort) : keys;
@@ -17895,7 +17763,7 @@ var require_stringify = __commonJS({
           strictNullHandling,
           skipNulls,
           encoder,
-          filter2,
+          filter3,
           sort,
           allowDots,
           serializeDate,
@@ -17927,9 +17795,9 @@ var require_stringify = __commonJS({
         format2 = opts.format;
       }
       var formatter = formats.formatters[format2];
-      var filter2 = defaults2.filter;
+      var filter3 = defaults2.filter;
       if (typeof opts.filter === "function" || isArray2(opts.filter)) {
-        filter2 = opts.filter;
+        filter3 = opts.filter;
       }
       return {
         addQueryPrefix: typeof opts.addQueryPrefix === "boolean" ? opts.addQueryPrefix : defaults2.addQueryPrefix,
@@ -17940,7 +17808,7 @@ var require_stringify = __commonJS({
         encode: typeof opts.encode === "boolean" ? opts.encode : defaults2.encode,
         encoder: typeof opts.encoder === "function" ? opts.encoder : defaults2.encoder,
         encodeValuesOnly: typeof opts.encodeValuesOnly === "boolean" ? opts.encodeValuesOnly : defaults2.encodeValuesOnly,
-        filter: filter2,
+        filter: filter3,
         format: format2,
         formatter,
         serializeDate: typeof opts.serializeDate === "function" ? opts.serializeDate : defaults2.serializeDate,
@@ -17953,13 +17821,13 @@ var require_stringify = __commonJS({
       var obj = object;
       var options = normalizeStringifyOptions(opts);
       var objKeys;
-      var filter2;
+      var filter3;
       if (typeof options.filter === "function") {
-        filter2 = options.filter;
-        obj = filter2("", obj);
+        filter3 = options.filter;
+        obj = filter3("", obj);
       } else if (isArray2(options.filter)) {
-        filter2 = options.filter;
-        objKeys = filter2;
+        filter3 = options.filter;
+        objKeys = filter3;
       }
       var keys = [];
       if (typeof obj !== "object" || obj === null) {
@@ -28021,8 +27889,8 @@ var require_node3 = __commonJS({
           break;
         case "PIPE":
         case "TCP":
-          var net2 = require("net");
-          stream5 = new net2.Socket({
+          var net = require("net");
+          stream5 = new net.Socket({
             fd: fd2,
             readable: false,
             writable: true
@@ -28529,6 +28397,155 @@ var require_follow_redirects = __commonJS({
     }
     module2.exports = wrap({ http: http2, https: https2 });
     module2.exports.wrap = wrap;
+  }
+});
+
+// node_modules/dotenv/package.json
+var require_package2 = __commonJS({
+  "node_modules/dotenv/package.json"(exports, module2) {
+    module2.exports = {
+      name: "dotenv",
+      version: "16.0.3",
+      description: "Loads environment variables from .env file",
+      main: "lib/main.js",
+      types: "lib/main.d.ts",
+      exports: {
+        ".": {
+          require: "./lib/main.js",
+          types: "./lib/main.d.ts",
+          default: "./lib/main.js"
+        },
+        "./config": "./config.js",
+        "./config.js": "./config.js",
+        "./lib/env-options": "./lib/env-options.js",
+        "./lib/env-options.js": "./lib/env-options.js",
+        "./lib/cli-options": "./lib/cli-options.js",
+        "./lib/cli-options.js": "./lib/cli-options.js",
+        "./package.json": "./package.json"
+      },
+      scripts: {
+        "dts-check": "tsc --project tests/types/tsconfig.json",
+        lint: "standard",
+        "lint-readme": "standard-markdown",
+        pretest: "npm run lint && npm run dts-check",
+        test: "tap tests/*.js --100 -Rspec",
+        prerelease: "npm test",
+        release: "standard-version"
+      },
+      repository: {
+        type: "git",
+        url: "git://github.com/motdotla/dotenv.git"
+      },
+      keywords: [
+        "dotenv",
+        "env",
+        ".env",
+        "environment",
+        "variables",
+        "config",
+        "settings"
+      ],
+      readmeFilename: "README.md",
+      license: "BSD-2-Clause",
+      devDependencies: {
+        "@types/node": "^17.0.9",
+        decache: "^4.6.1",
+        dtslint: "^3.7.0",
+        sinon: "^12.0.1",
+        standard: "^16.0.4",
+        "standard-markdown": "^7.1.0",
+        "standard-version": "^9.3.2",
+        tap: "^15.1.6",
+        tar: "^6.1.11",
+        typescript: "^4.5.4"
+      },
+      engines: {
+        node: ">=12"
+      }
+    };
+  }
+});
+
+// node_modules/dotenv/lib/main.js
+var require_main = __commonJS({
+  "node_modules/dotenv/lib/main.js"(exports, module2) {
+    var fs = require("fs");
+    var path = require("path");
+    var os = require("os");
+    var packageJson = require_package2();
+    var version2 = packageJson.version;
+    var LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/mg;
+    function parse2(src) {
+      const obj = {};
+      let lines = src.toString();
+      lines = lines.replace(/\r\n?/mg, "\n");
+      let match;
+      while ((match = LINE.exec(lines)) != null) {
+        const key = match[1];
+        let value = match[2] || "";
+        value = value.trim();
+        const maybeQuote = value[0];
+        value = value.replace(/^(['"`])([\s\S]*)\1$/mg, "$2");
+        if (maybeQuote === '"') {
+          value = value.replace(/\\n/g, "\n");
+          value = value.replace(/\\r/g, "\r");
+        }
+        obj[key] = value;
+      }
+      return obj;
+    }
+    function _log(message) {
+      console.log(`[dotenv@${version2}][DEBUG] ${message}`);
+    }
+    function _resolveHome(envPath) {
+      return envPath[0] === "~" ? path.join(os.homedir(), envPath.slice(1)) : envPath;
+    }
+    function config(options) {
+      let dotenvPath = path.resolve(process.cwd(), ".env");
+      let encoding = "utf8";
+      const debug = Boolean(options && options.debug);
+      const override = Boolean(options && options.override);
+      if (options) {
+        if (options.path != null) {
+          dotenvPath = _resolveHome(options.path);
+        }
+        if (options.encoding != null) {
+          encoding = options.encoding;
+        }
+      }
+      try {
+        const parsed = DotenvModule.parse(fs.readFileSync(dotenvPath, { encoding }));
+        Object.keys(parsed).forEach(function(key) {
+          if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
+            process.env[key] = parsed[key];
+          } else {
+            if (override === true) {
+              process.env[key] = parsed[key];
+            }
+            if (debug) {
+              if (override === true) {
+                _log(`"${key}" is already defined in \`process.env\` and WAS overwritten`);
+              } else {
+                _log(`"${key}" is already defined in \`process.env\` and was NOT overwritten`);
+              }
+            }
+          }
+        });
+        return { parsed };
+      } catch (e) {
+        if (debug) {
+          _log(`Failed to load ${dotenvPath} ${e.message}`);
+        }
+        return { error: e };
+      }
+    }
+    var DotenvModule = {
+      config,
+      parse: parse2
+    };
+    module2.exports.config = DotenvModule.config;
+    module2.exports.parse = DotenvModule.parse;
+    module2.exports = DotenvModule;
   }
 });
 
@@ -29941,26 +29958,26 @@ var require_BehaviorSubject = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.BehaviorSubject = void 0;
     var Subject_1 = require_Subject();
-    var BehaviorSubject = function(_super) {
-      __extends(BehaviorSubject2, _super);
-      function BehaviorSubject2(_value) {
+    var BehaviorSubject2 = function(_super) {
+      __extends(BehaviorSubject3, _super);
+      function BehaviorSubject3(_value) {
         var _this = _super.call(this) || this;
         _this._value = _value;
         return _this;
       }
-      Object.defineProperty(BehaviorSubject2.prototype, "value", {
+      Object.defineProperty(BehaviorSubject3.prototype, "value", {
         get: function() {
           return this.getValue();
         },
         enumerable: false,
         configurable: true
       });
-      BehaviorSubject2.prototype._subscribe = function(subscriber) {
+      BehaviorSubject3.prototype._subscribe = function(subscriber) {
         var subscription = _super.prototype._subscribe.call(this, subscriber);
         !subscription.closed && subscriber.next(this._value);
         return subscription;
       };
-      BehaviorSubject2.prototype.getValue = function() {
+      BehaviorSubject3.prototype.getValue = function() {
         var _a = this, hasError = _a.hasError, thrownError = _a.thrownError, _value = _a._value;
         if (hasError) {
           throw thrownError;
@@ -29968,12 +29985,12 @@ var require_BehaviorSubject = __commonJS({
         this._throwIfClosed();
         return _value;
       };
-      BehaviorSubject2.prototype.next = function(value) {
+      BehaviorSubject3.prototype.next = function(value) {
         _super.prototype.next.call(this, this._value = value);
       };
-      return BehaviorSubject2;
+      return BehaviorSubject3;
     }(Subject_1.Subject);
-    exports.BehaviorSubject = BehaviorSubject;
+    exports.BehaviorSubject = BehaviorSubject2;
   }
 });
 
@@ -32194,7 +32211,7 @@ var require_lastValueFrom = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.lastValueFrom = void 0;
     var EmptyError_1 = require_EmptyError();
-    function lastValueFrom(source, config) {
+    function lastValueFrom2(source, config) {
       var hasConfig = typeof config === "object";
       return new Promise(function(resolve, reject) {
         var _hasValue = false;
@@ -32217,7 +32234,7 @@ var require_lastValueFrom = __commonJS({
         });
       });
     }
-    exports.lastValueFrom = lastValueFrom;
+    exports.lastValueFrom = lastValueFrom2;
   }
 });
 
@@ -33467,7 +33484,7 @@ var require_filter = __commonJS({
     exports.filter = void 0;
     var lift_1 = require_lift();
     var OperatorSubscriber_1 = require_OperatorSubscriber();
-    function filter2(predicate, thisArg) {
+    function filter3(predicate, thisArg) {
       return lift_1.operate(function(source, subscriber) {
         var index = 0;
         source.subscribe(OperatorSubscriber_1.createOperatorSubscriber(subscriber, function(value) {
@@ -33475,7 +33492,7 @@ var require_filter = __commonJS({
         }));
       });
     }
-    exports.filter = filter2;
+    exports.filter = filter3;
   }
 });
 
@@ -34674,7 +34691,7 @@ var require_take = __commonJS({
     var empty_1 = require_empty();
     var lift_1 = require_lift();
     var OperatorSubscriber_1 = require_OperatorSubscriber();
-    function take(count) {
+    function take2(count) {
       return count <= 0 ? function() {
         return empty_1.EMPTY;
       } : lift_1.operate(function(source, subscriber) {
@@ -34689,7 +34706,7 @@ var require_take = __commonJS({
         }));
       });
     }
-    exports.take = take;
+    exports.take = take2;
   }
 });
 
@@ -38683,6 +38700,13 @@ function createNewLogger(folderPath) {
   if (!/^[\w\-]+$/g.test(folderPath)) {
     throw new Error(`Invalid level specified: ${folderPath}`);
   }
+  function getNewTimestamp() {
+    const date = /* @__PURE__ */ new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}-${month}-${day}`;
+  }
   const logger = createLogger({
     format: combine(
       timestamp(),
@@ -38693,37 +38717,27 @@ function createNewLogger(folderPath) {
       colorize()
     ),
     transports: [
-      new DailyRotateFile({
-        filename: `logs/${folderPath}/%DATE%.log`,
-        datePattern: "YYYY-MM-DD",
-        zippedArchive: false,
-        maxSize: "10m",
-        maxFiles: "14d"
+      new transports.File({
+        filename: `logs/${folderPath}/${getNewTimestamp()}.log`,
+        maxsize: 10 * 1024 * 1024,
+        // 10 MB
+        maxFiles: 1,
+        tailable: true,
+        level: "info"
       })
+      // new DailyRotateFile({
+      //   filename: `logs/${folderPath}/%DATE%.log`,
+      //   datePattern: 'YYYY-MM-DD',
+      //   zippedArchive: false,
+      //   maxSize: '10m',
+      //   maxFiles: '1'
+      // })
     ]
   });
   logger.on("error", (err) => {
     console.error(`Error logging to file: ${err}`);
   });
   return logger;
-}
-
-// src/utils/IPC.ts
-var import_dotenv = __toESM(require_main());
-import_dotenv.default.config();
-var CLIENT_ID = process.env.DISCORD_CLIENT_ID;
-function encodeIPCMessage(opcode, payload) {
-  const payloadBuffer = Buffer.from(JSON.stringify(payload));
-  const header = Buffer.alloc(8);
-  header.writeInt32LE(opcode, 0);
-  header.writeInt32LE(payloadBuffer.length, 4);
-  return Buffer.concat([header, payloadBuffer]);
-}
-function decodeIPCMessage(message) {
-  const opcode = message.readInt32LE(0);
-  const length = message.readInt32LE(4);
-  const payload = JSON.parse(message.subarray(8, 8 + length).toString());
-  return { opcode, payload };
 }
 
 // src/utils/DiscordClient.ts
@@ -38874,7 +38888,7 @@ var inherits = (constructor, superConstructor, props, descriptors2) => {
   });
   props && Object.assign(constructor.prototype, props);
 };
-var toFlatObject = (sourceObj, destObj, filter2, propFilter) => {
+var toFlatObject = (sourceObj, destObj, filter3, propFilter) => {
   let props;
   let i;
   let prop;
@@ -38892,8 +38906,8 @@ var toFlatObject = (sourceObj, destObj, filter2, propFilter) => {
         merged[prop] = true;
       }
     }
-    sourceObj = filter2 !== false && getPrototypeOf(sourceObj);
-  } while (sourceObj && (!filter2 || filter2(sourceObj, destObj)) && sourceObj !== Object.prototype);
+    sourceObj = filter3 !== false && getPrototypeOf(sourceObj);
+  } while (sourceObj && (!filter3 || filter3(sourceObj, destObj)) && sourceObj !== Object.prototype);
   return destObj;
 };
 var endsWith = (str, searchString, position) => {
@@ -39150,7 +39164,7 @@ Object.defineProperties(AxiosError, descriptors);
 Object.defineProperty(prototype, "isAxiosError", { value: true });
 AxiosError.from = (error, code, config, request, response, customProps) => {
   const axiosError = Object.create(prototype);
-  utils_default.toFlatObject(error, axiosError, function filter2(obj) {
+  utils_default.toFlatObject(error, axiosError, function filter3(obj) {
     return obj !== Error.prototype;
   }, (prop) => {
     return prop !== "isAxiosError";
@@ -39674,20 +39688,20 @@ function parseTokens(str) {
 function isValidHeaderName(str) {
   return /^[-_a-zA-Z]+$/.test(str.trim());
 }
-function matchHeaderValue(context, value, header, filter2, isHeaderNameFilter) {
-  if (utils_default.isFunction(filter2)) {
-    return filter2.call(this, value, header);
+function matchHeaderValue(context, value, header, filter3, isHeaderNameFilter) {
+  if (utils_default.isFunction(filter3)) {
+    return filter3.call(this, value, header);
   }
   if (isHeaderNameFilter) {
     value = header;
   }
   if (!utils_default.isString(value))
     return;
-  if (utils_default.isString(filter2)) {
-    return value.indexOf(filter2) !== -1;
+  if (utils_default.isString(filter3)) {
+    return value.indexOf(filter3) !== -1;
   }
-  if (utils_default.isRegExp(filter2)) {
-    return filter2.test(value);
+  if (utils_default.isRegExp(filter3)) {
+    return filter3.test(value);
   }
 }
 function formatHeader(header) {
@@ -41626,6 +41640,33 @@ var {
 
 // src/utils/DiscordClient.ts
 var import_dotenv2 = __toESM(require_main());
+
+// src/utils/IPC.ts
+var import_dotenv = __toESM(require_main());
+import_dotenv.default.config();
+var CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+function encodeIPCHandshake(payload) {
+  const payloadBuffer = Buffer.from(JSON.stringify(payload));
+  const header = Buffer.alloc(8);
+  header.writeInt32LE(0, 0);
+  header.writeInt32LE(payloadBuffer.length, 4);
+  return Buffer.concat([header, payloadBuffer]);
+}
+function encodeIPCMessage(opcode, payload) {
+  const payloadBuffer = Buffer.from(JSON.stringify(payload));
+  const header = Buffer.alloc(8);
+  header.writeInt32LE(opcode, 0);
+  header.writeInt32LE(payloadBuffer.length, 4);
+  return Buffer.concat([header, payloadBuffer]);
+}
+function decodeIPCMessage(message) {
+  const opcode = message.readInt32LE(0);
+  const length = message.readInt32LE(4);
+  const payload = JSON.parse(message.subarray(8, 8 + length).toString());
+  return payload;
+}
+
+// src/utils/DiscordClient.ts
 var import_rxjs = __toESM(require_cjs());
 var import_operators = __toESM(require_operators());
 import_dotenv2.default.config();
@@ -41639,6 +41680,7 @@ var DiscordClient = class extends import_net.Socket {
     this._authorized = false;
     this.client = new import_net.Socket();
     this.connectIPC(this.pipeName);
+    this.client.setMaxListeners(500);
     this.sendMessageSubject = new import_rxjs.Subject();
     this.setupThrottling();
     this.setupCrier();
@@ -41648,8 +41690,9 @@ var DiscordClient = class extends import_net.Socket {
     this.incomingData = (0, import_rxjs.fromEvent)(this.client, "data").pipe(
       (0, import_operators.map)(
         (rawData) => {
-          clientLog.info(`Incoming Data: ${decodeIPCMessage(rawData)}`);
-          return rawData;
+          const decodedData = decodeIPCMessage(rawData);
+          clientLog.info(decodedData);
+          return decodedData;
         }
       )
     );
@@ -41674,7 +41717,9 @@ var DiscordClient = class extends import_net.Socket {
     this.client.write(encoded);
   }
   // async write to client
-  sendCommand(cmd, args) {
+  // TODO: I can set this so that you send an event and it records a nonce and when a message is sent back 
+  // from the client with the same nonce it is returned to the service that called it
+  sendCommand(cmd, args, evt) {
     return __async(this, null, function* () {
       if (!this._authorized) {
         throw new Error("Cannot send command. The Discord IPC client is not connected.");
@@ -41685,10 +41730,49 @@ var DiscordClient = class extends import_net.Socket {
         cmd,
         args
       };
-      clientLog.info(`Adding ${message.cmd} to processQueue`);
+      if (evt) {
+        message.evt = evt;
+      }
+      clientLog.info(`Processing ${nonce}: ${cmd}`);
       const buffer = encodeIPCMessage(1, message);
       this.addToQueue(buffer);
-      return nonce;
+      const response$ = this.incomingData.pipe(
+        (0, import_operators.filter)((data) => data.nonce === nonce),
+        (0, import_operators.take)(1)
+        // unsubscribe after receiving the first response
+      );
+      const response = yield (0, import_rxjs.lastValueFrom)(response$);
+      return response;
+    });
+  }
+  // Assert that its a GetGuildsPayload
+  getGuilds() {
+    return __async(this, null, function* () {
+      const response = yield this.sendCommand("GET_GUILDS", {});
+      const guilds = response.data.guilds;
+      return guilds;
+    });
+  }
+  // Assert that it's a GetGuildPayload
+  getGuild(guildId) {
+    return __async(this, null, function* () {
+      const response = yield this.sendCommand("GET_GUILD", { guild_id: guildId });
+      const guild = response.data;
+      return guild;
+    });
+  }
+  getChannels(guildId) {
+    return __async(this, null, function* () {
+      const response = yield this.sendCommand("GET_CHANNELS", { guild_id: guildId });
+      const channels = response.data.channels;
+      return channels;
+    });
+  }
+  getChannel(channelId) {
+    return __async(this, null, function* () {
+      const response = yield this.sendCommand("GET_CHANNEL", { channel_id: channelId });
+      const channel = response.data;
+      return channel;
     });
   }
   connectIPC(pipeName) {
@@ -41697,7 +41781,7 @@ var DiscordClient = class extends import_net.Socket {
     });
     this.client.on("connect", () => {
       console.log("Connected to Discord IPC");
-      this.authorize(["rpc", "identify", "messages.read"]);
+      this.authorize(["rpc", "identify", "messages.read", "guilds", "guilds.join", "guilds.members.read"]);
       this.client.removeAllListeners("connect");
     });
     this.client.on("error", (error) => {
@@ -41711,7 +41795,7 @@ var DiscordClient = class extends import_net.Socket {
       // IPC version
       client_id: CLIENT_ID2
     };
-    const handshakeBuffer = encodeIPCMessage(0, handshakeMessage);
+    const handshakeBuffer = encodeIPCHandshake(handshakeMessage);
     this.client.write(handshakeBuffer);
     console.log(`Sent handshake`);
   }
@@ -41720,7 +41804,7 @@ var DiscordClient = class extends import_net.Socket {
       this.sendHandshake();
       this.client.on("data", (data) => __async(this, null, function* () {
         const message = decodeIPCMessage(data);
-        if (message.payload.evt === "READY") {
+        if (message.evt === "READY") {
           const nonce = v4_default();
           const authorizeCmd = {
             nonce,
@@ -41734,12 +41818,12 @@ var DiscordClient = class extends import_net.Socket {
           this.client.write(auth);
           console.log("Sent AUTHORIZE command");
         }
-        if (message.payload.cmd === "AUTHORIZE") {
+        if (message.cmd === "AUTHORIZE") {
           console.log("Authorized, Waiting for Token");
           try {
             const data2 = {
               grant_type: "authorization_code",
-              code: message.payload.data.code,
+              code: message.data.code,
               redirect_uri: "https://localhost",
               client_id: CLIENT_ID2,
               client_secret: CLIENT_SECRET
@@ -41762,8 +41846,8 @@ var DiscordClient = class extends import_net.Socket {
             console.error(error);
           }
         }
-        if (message.payload.cmd === "AUTHENTICATE") {
-          let data2 = message.payload.data;
+        if (message.cmd === "AUTHENTICATE") {
+          let data2 = message.data;
           this._authorized = true;
           this.client.removeAllListeners("data");
           console.log("Authorized Connection to Discord Client");
@@ -41787,6 +41871,44 @@ var DiscordClient = class extends import_net.Socket {
   }
 };
 
+// src/utils/panopticon.ts
+var import_rxjs2 = __toESM(require_cjs());
+var Panopticon = class {
+  constructor(client) {
+    this.logger = createNewLogger("panopticon");
+    this.client = client;
+    this.guilds = new import_rxjs2.BehaviorSubject(/* @__PURE__ */ new Map());
+    this.initialize();
+  }
+  initialize() {
+    return __async(this, null, function* () {
+      yield this.client.waitForAuthorization();
+      const guilds = yield this.client.getGuilds();
+      this.logger.info(guilds);
+      this.initializeGuilds(guilds);
+    });
+  }
+  initializeGuilds(guilds) {
+    return __async(this, null, function* () {
+      const guildsMap = /* @__PURE__ */ new Map();
+      for (const guild of guilds) {
+        const guildResponse = yield this.client.getGuild(guild.id);
+        const guildWithChannels = __spreadProps(__spreadValues({}, guildResponse), {
+          channels: /* @__PURE__ */ new Map()
+        });
+        guildsMap.set(guild.id, new import_rxjs2.BehaviorSubject(guildWithChannels));
+        const channels = yield this.client.getChannels(guild.id);
+        for (const channel of channels) {
+          const channelResponse = yield this.client.getChannel(channel.id);
+          const channelObservable = new import_rxjs2.BehaviorSubject(channel);
+          guildWithChannels.channels.set(channel.id, channelObservable);
+        }
+      }
+      this.guilds.next(guildsMap);
+    });
+  }
+};
+
 // src/utils/setup.ts
 var { v4: uuidv4 } = (init_esm_node(), __toCommonJS(esm_node_exports));
 var dotenv3 = require_main();
@@ -41798,38 +41920,19 @@ function setup() {
   return __async(this, null, function* () {
     try {
       let client;
+      let GuildService;
       try {
         client = new DiscordClient();
         client.on("authorized", () => {
           setupLog.info("IPC client connection established successfully");
         });
+        client.removeAllListeners("authorized");
       } catch (error) {
         setupLog.error("Error while setting up IPC client connection:", error);
       }
       try {
+        GuildService = new Panopticon(client);
         yield client.waitForAuthorization();
-        client.sendCommand("GET_GUILDS", {});
-        console.log("Send Get_Guilds");
-        client.incomingData.subscribe((data) => {
-          const message = decodeIPCMessage(data);
-          if (message.payload.cmd === "GET_GUILDS") {
-            let guilds = message.payload.data.guilds;
-            for (const guild of guilds) {
-              let args = {
-                guild_id: guild.id
-              };
-              console.log("Send GET_CHANNELS");
-              client.sendCommand("GET_CHANNELS", args);
-            }
-          }
-          if (message.payload.cmd === "GET_CHANNELS") {
-            let channels = message.payload.data.channels;
-            for (const channel of channels) {
-              console.log(channel.name, channel.type);
-            }
-          }
-          setupLog.info(message);
-        });
       } catch (error) {
         setupLog.error("Error while setting up the Panopticon");
       }

@@ -16,6 +16,17 @@ export function createNewLogger(folderPath: string): winston.Logger {
         throw new Error(`Invalid level specified: ${folderPath}`);
       }
 
+      function getNewTimestamp() {
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        // const hours = date.getHours();
+        // const minutes = date.getMinutes();
+        // const seconds = date.getSeconds();
+        return `${year}-${month}-${day}`;
+      }
+
     const logger = createLogger({
         format: combine(
           timestamp(),
@@ -26,13 +37,20 @@ export function createNewLogger(folderPath: string): winston.Logger {
           colorize()
         ),
         transports: [
-          new DailyRotateFile({
-            filename: `logs/${folderPath}/%DATE%.log`,
-            datePattern: 'YYYY-MM-DD',
-            zippedArchive: false,
-            maxSize: '10m',
-            maxFiles: '14d'
+          new transports.File({
+            filename: `logs/${folderPath}/${getNewTimestamp()}.log`,
+            maxsize: 10 * 1024 * 1024, // 10 MB
+            maxFiles: 1,
+            tailable: true,
+            level: 'info',
           })
+          // new DailyRotateFile({
+          //   filename: `logs/${folderPath}/%DATE%.log`,
+          //   datePattern: 'YYYY-MM-DD',
+          //   zippedArchive: false,
+          //   maxSize: '10m',
+          //   maxFiles: '1'
+          // })
         ]
       });
 

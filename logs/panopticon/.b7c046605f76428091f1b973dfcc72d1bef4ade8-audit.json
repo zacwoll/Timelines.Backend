@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": false,
+        "amount": 1
+    },
+    "auditLog": "logs\\panopticon\\.b7c046605f76428091f1b973dfcc72d1bef4ade8-audit.json",
+    "files": [
+        {
+            "date": 1682096762546,
+            "name": "logs\\panopticon\\2023-04-21.log",
+            "hash": "ae6d48e0847582670cd0149d7393dd26f870bffb23cbe411bf4c9caf51626a4b"
+        }
+    ],
+    "hashType": "sha256"
+}

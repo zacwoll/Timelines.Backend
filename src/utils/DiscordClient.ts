@@ -1,15 +1,16 @@
-import net, { Socket } from 'net';
+import { Socket } from 'net';
 import { v4 as uuidv4 } from 'uuid';
 import qs from 'qs';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { EventEmitter } from 'events';
 dotenv.config();
-import { encodeIPCMessage, decodeIPCMessage } from './IPC';
-import { fromEvent, Observable, of, Subject } from 'rxjs';
-import { concatMap, delay, map, throttleTime } from 'rxjs/operators';
+
+import { encodeIPCMessage, decodeIPCMessage, IPCMessage, IPCMessagePayload, encodeIPCHandshake } from './IPC';
+import { fromEvent, lastValueFrom, Observable, of, Subject } from 'rxjs';
+import { concatMap, delay, filter, map, take, throttleTime } from 'rxjs/operators';
 import { createNewLogger } from './logger';
 import { setupLog } from './setup';
+import { Channel, DiscordClientPayload, GetChannelsPayload, GetGuildPayload, GetGuildsPayload, GuildInitial, GET_GUILD_GUILD } from './DiscordClientTypes';
 
 const clientLog = createNewLogger('client');
 
@@ -21,13 +22,13 @@ export class DiscordClient extends Socket {
   private _authorized: boolean = false;
   protected client: Socket;
   private sendMessageSubject: Subject<Buffer>;
-  private throttledObservable: Observable<Buffer>;
-  public incomingData: Observable<Buffer>;
+  public incomingData: Observable<DiscordClientPayload>;
 
   constructor() {
     super();
     this.client = new Socket();
     this.connectIPC(this.pipeName);
+    this.client.setMaxListeners(500);
     this.sendMessageSubject = new Subject<Buffer>();
     this.setupThrottling();
     this.setupCrier();
@@ -36,10 +37,11 @@ export class DiscordClient extends Socket {
   // Create Crier
   private setupCrier(): void {
     this.incomingData = fromEvent(this.client, 'data').pipe(
-      map((rawData) => {
-        clientLog.info(`Incoming Data: ${decodeIPCMessage(rawData)}`);
+      map((rawData: Buffer) => {
+        const decodedData = decodeIPCMessage(rawData);
+        clientLog.info(decodedData);
       // Transform the raw data from the Socket into your desired data model
-          return rawData;
+          return decodedData;
       }
     ));
   }
@@ -70,20 +72,64 @@ export class DiscordClient extends Socket {
   }
 
   // async write to client
-  public async sendCommand(cmd: string, args: Record<string, any>): Promise<string> {
+  // TODO: I can set this so that you send an event and it records a nonce and when a message is sent back 
+  // from the client with the same nonce it is returned to the service that called it
+  public async sendCommand(cmd: string, args: Record<string, any>, evt ?: string): Promise<DiscordClientPayload> {
+    // Auth Check
     if (!this._authorized) {
       throw new Error('Cannot send command. The Discord IPC client is not connected.');
     }
+    // Command to IPC generation
     const nonce = uuidv4();
-    const message = {
+    const message: IPCMessagePayload = {
       nonce,
       cmd,
       args,
     };
-    clientLog.info(`Adding ${message.cmd} to processQueue`);
+    if (evt) {
+      message.evt = evt;
+    }
+    // Encode and add to ProcessingQueue
+    clientLog.info(`Processing ${nonce}: ${cmd}`);
     const buffer = encodeIPCMessage(1, message);
     this.addToQueue(buffer);
-    return nonce;
+    // Wait for response
+  
+    // Create a new subscription on incomingData filtered for the nonce of the command being sent
+    const response$ = this.incomingData.pipe(
+      filter(data => data.nonce === nonce),
+      take(1) // unsubscribe after receiving the first response
+    );
+
+    const response = await lastValueFrom(response$);
+    
+    return response;
+  }
+
+  // Assert that its a GetGuildsPayload
+  public async getGuilds(): Promise<GuildInitial[]> {
+    const response = await this.sendCommand('GET_GUILDS', {}) as GetGuildsPayload;
+    const guilds = response.data.guilds;
+    return guilds;
+  }
+
+  // Assert that it's a GetGuildPayload
+  public async getGuild(guildId: string): Promise<GET_GUILD_GUILD> {
+    const response = await this.sendCommand('GET_GUILD', { guild_id: guildId }) as GetGuildPayload;
+    const guild = response.data;
+    return guild;
+  }
+
+  public async getChannels(guildId: string): Promise<Channel[]> {
+    const response = await this.sendCommand('GET_CHANNELS', { guild_id: guildId }) as GetChannelsPayload;
+    const channels = response.data.channels;
+    return channels;
+  }
+
+  public async getChannel(channelId: string): Promise<Channel> {
+    const response = await this.sendCommand('GET_CHANNEL', { channel_id: channelId }) as GetChannelPayload;
+    const channel = response.data;
+    return channel;
   }
 
   public connectIPC(pipeName: string): this {
@@ -93,7 +139,7 @@ export class DiscordClient extends Socket {
   
     this.client.on('connect', () => {
       console.log('Connected to Discord IPC');
-      this.authorize(['rpc', 'identify', 'messages.read']);
+      this.authorize(['rpc', 'identify', 'messages.read', 'guilds', 'guilds.join', 'guilds.members.read']);
       this.client.removeAllListeners('connect');
     });
 
@@ -112,7 +158,7 @@ export class DiscordClient extends Socket {
     };
 
     // Send handshake message
-    const handshakeBuffer = encodeIPCMessage(0, handshakeMessage);
+    const handshakeBuffer = encodeIPCHandshake(handshakeMessage);
     this.client.write(handshakeBuffer);
 
     // Log The Send
@@ -127,7 +173,7 @@ export class DiscordClient extends Socket {
       // Last time the IPC server information is logged
       // console.log(JSON.stringify(message, null, 2));
     
-      if (message.payload.evt === "READY") {
+      if (message.evt === "READY") {
         const nonce = uuidv4();
         const authorizeCmd = {
           nonce,
@@ -143,13 +189,13 @@ export class DiscordClient extends Socket {
         console.log('Sent AUTHORIZE command');
       }
     
-      if (message.payload.cmd === "AUTHORIZE") {
+      if (message.cmd === "AUTHORIZE") {
         console.log('Authorized, Waiting for Token');
         // Await getting Authorized
         try {
           const data = {
             grant_type: 'authorization_code',
-            code: message.payload.data.code,
+            code: message.data.code,
             redirect_uri: 'https://localhost',
             client_id: CLIENT_ID,
             client_secret: CLIENT_SECRET,
@@ -176,8 +222,8 @@ export class DiscordClient extends Socket {
       }
   
       // Client is authorized, turn on protected write command
-      if (message.payload.cmd === "AUTHENTICATE") {
-        let data = message.payload.data;
+      if (message.cmd === "AUTHENTICATE") {
+        let data = message.data;
         this._authorized = true;
         this.client.removeAllListeners('data');
         console.log("Authorized Connection to Discord Client");

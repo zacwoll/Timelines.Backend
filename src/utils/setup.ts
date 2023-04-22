@@ -1,12 +1,11 @@
 import { createNewLogger } from './logger';
-import { encodeIPCCmd, decodeIPCMessage } from './IPC';
-import { Socket } from 'net';
 import { fromEvent, map, Observable } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
-import { MessagePayload } from 'discord.js';
 const { v4: uuidv4 } = require('uuid');
 // import { v4: uuidv4 } from 'uuid';
 import { DiscordClient } from './DiscordClient';
+import { Panopticon } from './panopticon';
+import { listenerCount } from 'process';
+
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -20,49 +19,68 @@ async function setup() {
   try {
     // Create a socket interface for discord
     let client: DiscordClient;
+    let GuildService: Panopticon;
     // Setup client connection
     try {
         client = new DiscordClient();
         client.on('authorized', () => {
             setupLog.info('IPC client connection established successfully');
         });
+        client.removeAllListeners('authorized');
     } catch (error) {
         setupLog.error('Error while setting up IPC client connection:', error);
     }
     // Continue with the next stage of setup
 
     try {
+        GuildService = new Panopticon(client);
         await client.waitForAuthorization();
 
+        // await setupPanopticon(client);
         // The Get_Guilds command is run
-        client.sendCommand('GET_GUILDS', {});
-        console.log('Send Get_Guilds');
+        // client.sendCommand('GET_GUILDS', {});
 
-        client.incomingData.subscribe((data) => {
-            // the data packet is decoded from IPC
-            const message = decodeIPCMessage(data);
+        // let textChannelSubscriberCount = 0;
 
-            if (message.payload.cmd === 'GET_GUILDS') {
-                let guilds = message.payload.data.guilds;
-                for (const guild of guilds) {
-                    // console.log(guild.name, guild.id);
-                    let args = {
-                        guild_id: guild.id
-                    }
-                    console.log('Send GET_CHANNELS');
-                    client.sendCommand('GET_CHANNELS', args)
-                }
-            }
+        // client.incomingData.subscribe((data) => {
+        //     // the data packet is decoded from IPC
+        //     const message = decodeIPCMessage(data);
 
-            if (message.payload.cmd === 'GET_CHANNELS') {
-                let channels = message.payload.data.channels;
-                for (const channel of channels) {
-                    console.log(channel.name, channel.type);
-                }
-            }
-            // the message is logged to the logs/client-log
-            setupLog.info(message);
-          });
+        //     if (message.payload.cmd === 'GET_GUILDS') {
+
+        //         // push to guilds observable
+        //         let guilds = message.payload.data.guilds;
+        //         for (const guild of guilds) {
+        //             // console.log(guild.name, guild.id);
+        //             let args = {
+        //                 guild_id: guild.id
+        //             }
+        //             client.sendCommand('GET_CHANNELS', args)
+        //         }
+        //     }
+
+        //     // new observable from piping guilds observable, sending a get_channels command for each guild
+
+        //     if (message.payload.cmd === 'GET_CHANNELS') {
+        //         // push to channels observable
+        //         let channels = message.payload.data.channels;
+        //         for (const channel of channels) {
+        //             if (channel.type === 0) {
+        //                 let args = {
+        //                     channel_id: channel.id
+        //                 }
+        //                 client.sendCommand('SUBSCRIBE', args, 'MESSAGE_CREATE');
+        //             }
+        //             // console.log(channel.name, channel.type);
+        //         }
+        //     }
+
+        //     if (message.payload.cmd === "SUBSCRIBE") {
+        //         console.log(textChannelSubscriberCount++);
+        //     }
+        //     // the message is logged to the logs/client-log
+        //     setupLog.info(message);
+        //   });
     } catch (error) {
         setupLog.error('Error while setting up the Panopticon');
     }
