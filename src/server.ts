@@ -1,129 +1,33 @@
-const express = require('express');
-const qs = require('qs'); // To convert the data to x-www-form-urlencoded format
-import { createNewLogger } from './utils/logger';
-import { DiscordClient } from './utils/DiscordClient';
-import { encodeIPCMessage, decodeIPCMessage } from './utils/IPC';
-const { v4: uuidv4 } = require('uuid');
-const dotenv = require('dotenv');
-dotenv.config();
-
-const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
-const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+import express from "express";
 
 const app = express();
 const port = 3000;
 
-export const serverLog = createNewLogger('server');
+app.use(express.json());
 
-let discord = new DiscordClient();
-    // Send GET_GUILDS
-    // let nonce = uuidv4();
-    // let getGuildsCmd = {
-    //     nonce,
-    //     args: {},
-    //     cmd: "GET_GUILDS"
-    //     }
-    // discord.write(encodeIPCMessage(1, getGuildsCmd));
-    // discord.on('data', data => {
-    //     const message = decodeIPCMessage(data);
-    //     console.log(JSON.stringify(message));
-    // })
+// Endpoint for receiving authorization codes
+app.post("/webhook", (req, res) => {
+    const code = req.body.code;
+    const guildId = req.body.guildId;
+  
+    console.log(`Authorization code: ${code}`);
+    console.log(`Guild ID: ${guildId}`);
+  
+    // Emit an event with the login data
+  
+    res.sendStatus(200);
+  });
 
-// getClient();
+// Endpoint for serving timeline data
+app.get("/timelines/:user", (req, res) => {
+  const user = req.params.user;
 
-// // // Run Setup
-// // let client = getClient();
-// getClient().then(client => {
-//     // Set up slurper
-    
-//     // Send GET_GUILDS
-//     let nonce = uuidv4();
-//     let getGuildsCmd = {
-//         nonce,
-//         args: {},
-//         cmd: "GET_GUILDS"
-//         }
-//     client.write(encodeIPCMessage(1, getGuildsCmd));
+  // TODO: Fetch timeline data for the given user
+  // ...
 
-//     let channel_count = 0;
-//     let text_channel_count = 0;
-//     let subscriber_count = 0;
-
-//     client.on('data', async (data) => {
-        
-//         const message = decodeIPCMessage(data);
-        
-//         serverLog.info(message);
-
-//         if (message.payload.cmd === "GET_GUILDS") {
-//             let guilds = message.payload.data.guilds;
-        
-//             for (const guild of guilds) {
-//               let nonce = uuidv4();
-//               let getChannelsCmd = {
-//                 nonce,
-//                 args: {
-//                   guild_id: guild.id
-//                 },
-//                 cmd: "GET_CHANNELS"
-//               };
-        
-//               const response = await new Promise((resolve) => {
-//                 client.once('data', (data) => {
-//                   const message = decodeIPCMessage(data);
-//                   if (message.payload.nonce === nonce) {
-//                     resolve(message.payload.data);
-//                   }
-//                 });
-          
-//                 client.write(encodeIPCMessage(1, getChannelsCmd));
-//               });
-        
-//             //   logStream.write(response);
-//             }
-//           }
-        
-//         // if (message.payload.cmd === "GET_CHANNELS") {
-//         //     let channels = message.payload.data.channels;
-
-//         //     for (const channel of channels) {
-//         //         if (channel.type != 4) { 
-//         //             continue;
-//         //         }
-//         //         let nonce = uuidv4();
-//         //         let getChannelCmd = {
-//         //             nonce,
-//         //             args: {
-//         //                 channel_id: channel.id
-//         //             },
-//         //             evt: "MESSAGE_CREATE",
-//         //             cmd: "SUBSCRIBE"
-//         //         }
-        
-//         //         const response = await new Promise((resolve) => {
-//         //           client.once('data', (data) => {
-//         //             const message = decodeIPCMessage(data);
-//         //             if (message.payload.nonce === nonce) {
-//         //               resolve(message.payload.data);
-//         //             }
-//         //           });
-            
-//         //           client.write(encodeIPCMessage(1, getChannelCmd));
-//         //         });
-//         //         // logStream.write(response);
-                
-//         //         // Add a delay of 1 second (1000 milliseconds) between each iteration
-//         //         await new Promise((resolve) => setTimeout(resolve, 10));
-//         //     }
-//         // }
-
-//         if (message.payload.cmd === "SUBSCRIBE") {
-
-//         }
-//     })
-
-// });
+  res.send(`Timeline data for user ${user}`);
+});
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Example app listening at http://localhost:${port}`);
 });

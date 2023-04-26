@@ -1,9 +1,9 @@
 // New plan, use winston, create logger, import logger into everything, create new logger for the service we'll use it for, or we'll import one
 
-import winston from 'winston';
+import winston from "winston";
 const { createLogger, transports, format } = winston;
 const { combine, timestamp, json, prettyPrint, align, padLevels, colorize } = format;
-const DailyRotateFile = require('winston-daily-rotate-file');
+const DailyRotateFile = require("winston-daily-rotate-file");
 
 
 // // Usage:
@@ -42,7 +42,7 @@ export function createNewLogger(folderPath: string): winston.Logger {
             maxsize: 10 * 1024 * 1024, // 10 MB
             maxFiles: 1,
             tailable: true,
-            level: 'info',
+            level: "info",
           })
           // new DailyRotateFile({
           //   filename: `logs/${folderPath}/%DATE%.log`,
@@ -55,7 +55,7 @@ export function createNewLogger(folderPath: string): winston.Logger {
       });
 
     // Add error handling for the DailyRotateFile transport
-    logger.on('error', (err: NodeJS.ErrnoException) => {
+    logger.on("error", (err: NodeJS.ErrnoException) => {
         console.error(`Error logging to file: ${err}`);
     });
     return logger;

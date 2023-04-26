@@ -12,8 +12,12 @@ async function build(options = {}) {
       minify: true,
       platform: "node",
       target: "node14",
+      verbose: true, // enable verbose logging
+      logLevel: "verbose",
       ...options,
     };
+
+    console.log("Starting build process...");
 
     // Run esbuild to build the project
     await esbuild.build({
@@ -22,8 +26,9 @@ async function build(options = {}) {
       bundle: true,
       ...mergedOptions,
     });
-
-    console.log("Build successful!");
+    
+    console.log("Build process complete.");
+    
   } catch (error) {
     console.error("Build failed!", error);
     process.exit(1);
